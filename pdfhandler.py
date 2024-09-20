@@ -1,6 +1,9 @@
 import requests
 
-from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+# TODO: delete if unecessary
+from reportlab.rl_config import defaultPageSize
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfgen import canvas 
 
 # There's no validation (yet) - Be careful what you're scraping. Otherwise you'll probably have a shell on your system soon... :)
@@ -10,12 +13,17 @@ def siteToPdf(url,outfile):
     r = requests.get(url)
     #its ugly, gpt-chan wont judge.
     html = r.text
-    print(r.text)
-    pdf = canvas.Canvas(outfile, pagesize=A4)
-    width=150
-    height=200
-    pdf.drawString(width,height,html)
-    pdf.showPage()
-    pdf.save()
+    
+    pdf = SimpleDocTemplate(outfile)
+    w = 300
+    h = 500
+    Story = [Spacer(w,h)]
+    #style = styles["Normal"]
+    #pdf.setFont('Times-Roman',9)
+    Story.append(Paragraph(html))
+    Story.append(Spacer(100,100))
+    pdf.build(Story)
+    #pdf.showPage()
+    #pdf.save()
 
 
