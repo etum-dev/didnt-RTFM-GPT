@@ -1,3 +1,4 @@
+.env
 testfiles/
 bin/ 
 # Byte-compiled / optimized / DLL files
