@@ -1,29 +1,49 @@
+from bs4 import BeautifulSoup
+
 import requests
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 # TODO: delete if unecessary
 from reportlab.rl_config import defaultPageSize
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.pdfgen import canvas 
+#from reportlab.pdfgen import canvas 
 
-# There's no validation (yet) - Be careful what you're scraping. Otherwise you'll probably have a shell on your system soon... :)
 
-def siteToPdf(url,outfile):
-    # TODO: append http(s) if not present
+def stripHTML(html):
+    # Function to fix html for PDF generation. (<a href=> messes up for example)
+    soup = BeautifulSoup(html)
+    strHtml = soup.get_text()
+    return strHtml
+
+def pdfCheck(size):
+    # Function to validate PDF size.
+    pass
+
+def spider():
+    pass
+
+def siteToPdf(url,outfolder):
+    n = 0
+    pdfFile = f"{n}.pdf"
+    if "http" not in url:
+        url = "http://"+url
     r = requests.get(url)
-    #its ugly, gpt-chan wont judge.
-    html = r.text
-    
-    pdf = SimpleDocTemplate(outfile)
-    w = 300
-    h = 500
+    html=r.text
+    #TODO: if multi-page, spider it.
+    #TODO: as GPT can't take too much text, split into multiple PDFs.
+    #TODO: If pages > 5, split
+
+    pdf = SimpleDocTemplate(outfolder+"/"+pdfFile)
+    w = 100
+    h = 100
     Story = [Spacer(w,h)]
-    #style = styles["Normal"]
-    #pdf.setFont('Times-Roman',9)
-    Story.append(Paragraph(html))
-    Story.append(Spacer(100,100))
+    try: 
+        Story.append(Paragraph(stripHTML(html)))
+        
+    except Exception as err:
+        print(err)
+        exit()
     pdf.build(Story)
-    #pdf.showPage()
-    #pdf.save()
+    return pdf
+
 
 

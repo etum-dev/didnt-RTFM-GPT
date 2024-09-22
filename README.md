@@ -10,3 +10,4 @@ Simply supply your pdf directly, or give it an url. it will convert to PDF and p
 ## Setup
 In your env, add API key.
 
+pip install -i"https://www.reportlab.com/pypi" rlextra
